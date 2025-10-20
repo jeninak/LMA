@@ -3,16 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Notes.NotesPage"
              Title="Notes">
-    <VerticalStackLayout Spacing="10" Margin="10">
-        <HorizontalStackLayout Spacing="10">
-            <Image Source="dotnet_bot.png"
-                   SemanticProperties.Description="The dot net bot waving hello!"
-                   HeightRequest="64" />
-            <Label FontSize="22" FontAttributes="Bold" Text="Notes" VerticalOptions="End" />
-            <Label FontSize="22" Text="v1.0" VerticalOptions="End" />
-        </HorizontalStackLayout>
 
-        <Label Text="This app is written in XAML and C# with .NET MAUI." />
-        <Button Text="Learn more..." Clicked="LearnMore_Clicked" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="Auto,*">
+        <Button 
+            Text="Add Note"
+            Clicked="OnAddClicked"
+            HorizontalOptions="Center"
+            Margin="10" />
+
+        <CollectionView 
+            x:Name="notesCollection"
+            Grid.Row="1"
+            SelectionMode="Single"
+            SelectionChanged="OnSelectionChanged">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="5" Padding="10" BorderColor="LightGray">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Text}" 
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2" />
+                            <Label Text="{Binding Date, StringFormat='{0:G}'}"
+                                   FontSize="10"
+                                   TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>
