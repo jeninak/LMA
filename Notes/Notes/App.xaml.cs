@@ -1,11 +1,16 @@
-﻿namespace Notes;
-
-public partial class App : Application
+﻿namespace Notes
 {
-    public App()
+    public partial class App : Application
     {
-        InitializeComponent();
+        public App()
+        {
+            // Remove or comment out this line if the partial method is auto-generated elsewhere
+            // InitializeComponent();
+        }
 
-        MainPage = new AppShell();
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
+            return new Window(new AppShell());
+        }
     }
 }
