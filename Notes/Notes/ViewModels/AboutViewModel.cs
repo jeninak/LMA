@@ -67,7 +67,7 @@ internal class AboutViewModel : INotifyPropertyChanged
     }
 
     private async Task ShowMoreInfo() =>
-        await Launcher.Default.OpenAsync("https://aka.ms/maui");
+        await Launcher.Default.OpenAsync("https://youtu.be/xvFZjo5PgG0?si=wE4RoDV7hqYecamH");
 
     #region INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
