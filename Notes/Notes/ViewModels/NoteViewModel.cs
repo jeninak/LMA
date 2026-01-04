@@ -57,17 +57,25 @@ internal class NoteViewModel : ObservableObject, IQueryAttributable
 
     void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.ContainsKey("load"))
+        if (query.TryGetValue("load", out var loadObj) && loadObj?.ToString() is string filename && filename.Length > 0)
         {
-            _note = Models.Note.Load(query["load"].ToString());
-            RefreshProperties();
+            var loaded = Models.Note.Load(filename);
+            if (loaded != null)
+            {
+                _note = loaded;
+                RefreshProperties();
+            }
         }
     }
 
     public void Reload()
     {
-        _note = Models.Note.Load(_note.Filename);
-        RefreshProperties();
+        var reloaded = Models.Note.Load(_note.Filename);
+        if (reloaded != null)
+        {
+            _note = reloaded;
+            RefreshProperties();
+        }
     }
 
     private void RefreshProperties()
