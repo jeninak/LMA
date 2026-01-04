@@ -1,23 +1,33 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:Notes.ViewModels"
+             xmlns:viewmodels="clr-namespace:Notes.ViewModels"
              x:Class="Notes.Views.AboutPage"
-             x:DataType="viewModels:AboutViewModel">
-    <ContentPage.BindingContext>
-        <viewModels:AboutViewModel />
-    </ContentPage.BindingContext>
-    <VerticalStackLayout Spacing="10" Margin="10">
-        <HorizontalStackLayout Spacing="10">
-            <Image Source="dotnet_bot.png"
-                   SemanticProperties.Description="The dot net bot waving hello!"
-                   HeightRequest="64" />
-            <Label FontSize="22" FontAttributes="Bold" Text="{Binding Title}" VerticalOptions="End" />
-            <Label FontSize="22" Text="{Binding Version}" VerticalOptions="End" />
-        </HorizontalStackLayout>
+             x:DataType="viewmodels:AboutViewModel"
+             Title="About">
+  <ScrollView>
+    <VerticalStackLayout Padding="20" Spacing="16">
+      <Label Text="{Binding Title}" Style="{StaticResource TitleLabelStyle}" />
+      <Label Text="{Binding Version}" Style="{StaticResource SubtitleLabelStyle}" />
 
-        <Label Text="{Binding Message}" />
-        <Button Text="Learn more..." Command="{Binding ShowMoreInfoCommand}" />
+      <Frame Style="{StaticResource CardFrameStyle}">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="About" Style="{StaticResource SubtitleLabelStyle}" />
+          <Label Text="{Binding Message}" Style="{StaticResource BodyLabelStyle}" />
+        </VerticalStackLayout>
+      </Frame>
+
+      <Frame Style="{StaticResource CardFrameStyle}">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="Joke of the day" Style="{StaticResource SubtitleLabelStyle}" />
+          <ActivityIndicator Color="{StaticResource PrimaryColor}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
+          <Label Text="{Binding JokeOfTheDay}" Style="{StaticResource BodyLabelStyle}" LineBreakMode="WordWrap" />
+          <HorizontalStackLayout Spacing="12">
+            <Button Text="Refresh" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding RefreshJokeCommand}" />
+            <Button Text="More info" BackgroundColor="Transparent" TextColor="{StaticResource PrimaryColor}" Command="{Binding ShowMoreInfoCommand}" />
+          </HorizontalStackLayout>
+        </VerticalStackLayout>
+      </Frame>
     </VerticalStackLayout>
-
+  </ScrollView>
 </ContentPage>

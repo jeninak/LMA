@@ -1,14 +1,71 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Notes"
              x:Class="Notes.App">
-    <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Application.Resources>
+  <Application.Resources>
+    <ResourceDictionary>
+
+      <!-- Palette -->
+      <Color x:Key="PrimaryColor">#512BD4</Color>
+      <Color x:Key="PrimaryDarkColor">#3B1EA8</Color>
+      <Color x:Key="AccentColor">#6C5CE7</Color>
+      <Color x:Key="BackgroundColor">#F6F7FB</Color>
+      <Color x:Key="CardBackgroundColor">#FFFFFF</Color>
+      <Color x:Key="TextPrimaryColor">#222222</Color>
+      <Color x:Key="TextSecondaryColor">#6B6B6B</Color>
+
+      <!-- Page base style -->
+      <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}" />
+        <Setter Property="Padding" Value="0" />
+      </Style>
+
+      <!-- Labels -->
+      <Style x:Key="TitleLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource TextPrimaryColor}" />
+      </Style>
+
+      <Style x:Key="SubtitleLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource TextSecondaryColor}" />
+      </Style>
+
+      <Style x:Key="BodyLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{StaticResource TextPrimaryColor}" />
+      </Style>
+
+      <!-- Buttons -->
+      <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="FontAttributes" Value="Bold" />
+      </Style>
+
+      <!-- Card / Frame -->
+      <Style x:Key="CardFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource CardBackgroundColor}" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="0,6" />
+      </Style>
+
+      <!-- Note item styles -->
+      <Style x:Key="NoteTextStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{StaticResource TextPrimaryColor}" />
+      </Style>
+
+      <Style x:Key="NoteDateStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{StaticResource TextSecondaryColor}" />
+      </Style>
+
+    </ResourceDictionary>
+  </Application.Resources>
 </Application>

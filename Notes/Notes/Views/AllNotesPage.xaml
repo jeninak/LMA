@@ -5,35 +5,33 @@
              Title="Your Notes"
              NavigatedTo="ContentPage_NavigatedTo"
              x:DataType="viewModels:NotesViewModel">
-    <ContentPage.BindingContext>
-        <viewModels:NotesViewModel />
-    </ContentPage.BindingContext>
+  <ContentPage.BindingContext>
+    <viewModels:NotesViewModel />
+  </ContentPage.BindingContext>
 
-    <!-- Add an item to the toolbar -->
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Command="{Binding NewCommand}" IconImageSource="{FontImage Glyph='+', Color=Black, Size=22}" />
-    </ContentPage.ToolbarItems>
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add" Command="{Binding NewCommand}" />
+  </ContentPage.ToolbarItems>
 
-    <!-- Display notes in a list -->
-    <CollectionView x:Name="notesCollection"
-                    ItemsSource="{Binding AllNotes}"
-                    Margin="20"
-                    SelectionMode="Single"
-                    SelectionChangedCommand="{Binding SelectNoteCommand}"
-                    SelectionChangedCommandParameter="{Binding x:DataType='CollectionView', Source={RelativeSource Self}, Path=SelectedItem}">
-        <!-- Designate how the collection of items are laid out -->
-        <CollectionView.ItemsLayout>
-            <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
-        </CollectionView.ItemsLayout>
+  <CollectionView x:Name="notesCollection"
+                  ItemsSource="{Binding AllNotes}"
+                  Margin="20"
+                  SelectionMode="Single"
+                  SelectionChangedCommand="{Binding SelectNoteCommand}"
+                  SelectionChangedCommandParameter="{Binding x:DataType='CollectionView', Source={RelativeSource Self}, Path=SelectedItem}">
+    <CollectionView.ItemsLayout>
+      <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+    </CollectionView.ItemsLayout>
 
-        <!-- Define the appearance of each item in the list -->
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="viewModels:NoteViewModel">
-                <StackLayout>
-                    <Label Text="{Binding Text}" FontSize="22"/>
-                    <Label Text="{Binding Date}" FontSize="14" TextColor="Silver"/>
-                </StackLayout>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+    <CollectionView.ItemTemplate>
+      <DataTemplate x:DataType="viewModels:NoteViewModel">
+        <Frame Style="{StaticResource CardFrameStyle}">
+          <VerticalStackLayout Spacing="6">
+            <Label Text="{Binding Text}" Style="{StaticResource NoteTextStyle}" />
+            <Label Text="{Binding Date}" Style="{StaticResource NoteDateStyle}" />
+          </VerticalStackLayout>
+        </Frame>
+      </DataTemplate>
+    </CollectionView.ItemTemplate>
+  </CollectionView>
 </ContentPage>
