@@ -1,55 +1,59 @@
-﻿namespace Notes.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
-internal class Note
+namespace Notes.Models
 {
-    public string Filename { get; set; }
-    public string Text { get; set; }
-    public DateTime Date { get; set; }
-
-    public void Save() =>
-        File.WriteAllText(System.IO.Path.Combine(FileSystem.AppDataDirectory, Filename), Text);
-
-        public void Delete() =>
-        File.Delete(System.IO.Path.Combine(FileSystem.AppDataDirectory, Filename));
-
-    public static Note Load(string filename)
+    public class Note
     {
-        filename = System.IO.Path.Combine(FileSystem.AppDataDirectory, filename);
+        public string Filename { get; set; }
+        public string Text { get; set; }
+        public DateTime Date { get; set; }
 
-        if (!File.Exists(filename))
-            throw new FileNotFoundException("Unable to find file on local storage.", filename);
+        public Note()
+        {
+            Filename = string.Empty;
+            Text = string.Empty;
+            Date = DateTime.UtcNow;
+        }
 
-        return
-            new()
+        public void Save()
+        {
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Notes");
+            Directory.CreateDirectory(dir);
+            var path = Path.Combine(dir, Filename);
+            File.WriteAllText(path, JsonSerializer.Serialize(this));
+        }
+
+        public void Delete()
+        {
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Notes");
+            var path = Path.Combine(dir, Filename);
+            if (File.Exists(path)) File.Delete(path);
+        }
+
+        public static Note Load(string filename)
+        {
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Notes");
+            var path = Path.Combine(dir, filename);
+            if (!File.Exists(path)) throw new FileNotFoundException($"Note file not found: {filename}");
+            var json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<Note>(json) ?? throw new InvalidDataException("Failed to deserialize note.");
+        }
+
+        public static IEnumerable<Note> LoadAll()
+        {
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Notes");
+            if (!Directory.Exists(dir)) yield break;
+            var files = Directory.GetFiles(dir);
+            foreach (var f in files)
             {
-                Filename = Path.GetFileName(filename),
-                Text = File.ReadAllText(filename),
-                Date = File.GetLastWriteTime(filename)
-            };
-    }
-
-    public static IEnumerable<Note> LoadAll()
-    {
-        // Get the folder where the notes are stored.
-        string appDataPath = FileSystem.AppDataDirectory;
-
-        // Use Linq extensions to load the *.notes.txt files.
-        return Directory
-
-                // Select the file names from the directory
-                .EnumerateFiles(appDataPath, "*.notes.txt")
-
-                // Each file name is used to load a note
-                .Select(filename => Note.Load(Path.GetFileName(filename)))
-
-                // With the final collection of notes, order them by date
-                .OrderByDescending(note => note.Date);
-    }
-
-    public Note()
-    {
-        Filename = $"{Path.GetRandomFileName()}.notes.txt";
-        Date = DateTime.Now;
-        Text = "";
+                var json = File.ReadAllText(f);
+                var note = JsonSerializer.Deserialize<Note>(json);
+                if (note != null) yield return note;
+            }
+        }
     }
 }

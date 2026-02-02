@@ -22,6 +22,9 @@ public static class MauiProgram
         builder.Services.AddSingleton(new HttpClient());
         builder.Services.AddSingleton<IJokeService, JokeService>();
 
+        // Register the SQLite-backed notes service
+        builder.Services.AddSingleton<INotesService, SqliteNotesService>();
+
         // Keep the AboutViewModel registered (used by About page)
         builder.Services.AddSingleton<AboutViewModel>();
 

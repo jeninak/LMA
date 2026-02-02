@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Notes.Models;
+using Notes.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Linq;
@@ -9,17 +10,36 @@ namespace Notes.ViewModels;
 
 internal class NotesViewModel : IQueryAttributable
 {
+    private readonly INotesService _notesService;
+
     public ObservableCollection<ViewModels.NoteViewModel> AllNotes { get; }
     public ICommand NewCommand { get; }
     public ICommand SelectNoteCommand { get; }
 
-    public NotesViewModel()
+    // Parameterless ctor used by XAML or fallback; resolves service via MAUI service provider if available.
+    public NotesViewModel() : this(
+        (Application.Current?.Handler?.MauiContext?.Services?.GetService(typeof(INotesService)) as INotesService)
+        ?? new NotesService())
     {
-        // Guard against LoadAll returning null
-        var notes = Models.Note.LoadAll() ?? Enumerable.Empty<Models.Note>();
-        AllNotes = new ObservableCollection<ViewModels.NoteViewModel>(notes.Select(n => new NoteViewModel(n)));
+    }
+
+    public NotesViewModel(INotesService notesService)
+    {
+        _notesService = notesService;
+        AllNotes = new ObservableCollection<ViewModels.NoteViewModel>();
         NewCommand = new AsyncRelayCommand(NewNoteAsync);
         SelectNoteCommand = new AsyncRelayCommand<ViewModels.NoteViewModel?>(SelectNoteAsync);
+
+        // load first page
+        _ = LoadNotesAsync();
+    }
+
+    private async Task LoadNotesAsync(int page = 0, int pageSize = 50)
+    {
+        var notes = await _notesService.GetAllAsync(page, pageSize);
+        AllNotes.Clear();
+        foreach (var n in notes)
+            AllNotes.Add(new NoteViewModel(n, _notesService));
     }
 
     private async Task NewNoteAsync()
@@ -57,9 +77,10 @@ internal class NotesViewModel : IQueryAttributable
             // If note isn't found, it's new; add it.
             else
             {
-                var loaded = Models.Note.Load(savedId);
+                // load from db and insert
+                var loaded = _notesService.GetByIdAsync(savedId).GetAwaiter().GetResult();
                 if (loaded != null)
-                    AllNotes.Insert(0, new NoteViewModel(loaded));
+                    AllNotes.Insert(0, new NoteViewModel(loaded, _notesService));
             }
         }
     }
